@@ -135,6 +135,11 @@ function sync_getcourses_fromomega($academicids, $syncinfo, $options = null){
 	curl_setopt($curl, CURLOPT_POSTFIELDS,json_encode($fields));
 	curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
 	$result = json_decode(curl_exec($curl));
+	//##########
+	if(!$result){
+	    return array(0,0); //result is null
+	}
+	//##########
 	curl_close($curl);
 	if ($options) {
 		mtrace("#### Adding Courses ####");
@@ -463,4 +468,48 @@ function sync_records_tabs() {
 			get_string("inactive", "local_sync")
 	);	
 	return $tabs;
+}
+
+function sync_sendmail($admin, $case){
+    GLOBAL $CFG, $USER, $DB;
+    $userfrom = core_user::get_noreply_user();
+    $userfrom->maildisplay = true;
+    $eventdata = new stdClass();
+    if ($case == "sync_getacademicperiod_error"){
+        //subject
+        $eventdata->subject = "Get academic period sync error";
+        $messagehtml = "<html>";
+        $messagehtml .= "<p>"."Dear: ". $admin->firstname . " " . $admin->lastname . ",</p>";
+        $messagehtml .= "<p>"."This automated mail regrets to inform you there was an error while performing the synchronization on: " . "</p>";
+        $messagehtml .= "<p>". date('d/m/Y h:i:s a', time()). "</p>";
+        $messagehtml .= "<p>". "We are sorry for the inconvenience." ."</p>";
+        $messagehtml .= "<p>". "Sincerely, " ."</p>";
+        $messagehtml .= "<p>". "The WebCursos Team" ."</p>";
+        $messagehtml .= "</html>";
+        
+        $messagetext = "Dear" ." ". $admin->firstname . " " . $admin->lastname . ",\n";
+        $messagetext .= "This automated mail regrets to inform you there was an error while performing the synchronization on: ". "\n";
+        $messagetext .= date('d/m/Y h:i:s a', time()). "\n";
+        $messagetext .= "We are sorry for the inconvenience.\n Sincerely, \n The WebCursos Team ". "\n";
+    }
+    $eventdata->component = "local_sync"; // your component name
+    $eventdata->name = "sync_notification"; // this is the message name from messages.php
+    $eventdata->userfrom = $userfrom;
+    $eventdata->userto = $admin->id;
+    $eventdata->fullmessage = $messagetext;
+    $eventdata->fullmessageformat = FORMAT_HTML;
+    $eventdata->fullmessagehtml = $messagehtml;
+    $eventdata->smallmessage = "Sync error";
+    $eventdata->notification = 1; // this is only set to 0 for personal messages between users
+    
+    $eventdata->contexturl = 'http://GalaxyFarFarAway.com';
+    $eventdata->contexturlname = 'Context name';
+    $eventdata->replyto = "random@example.com";
+    $content = array('*' => array('header' => ' test ', 'footer' => ' test ')); // Extra content for specific processor
+    //$eventdata->set_additional_content('email', $content);
+    
+    $eventdata->courseid = 1;
+    message_send($eventdata);
+    
+                
 }

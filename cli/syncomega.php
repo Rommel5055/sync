@@ -25,7 +25,7 @@
 * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 
-define('CLI_SCRIPT', true);
+//define('CLI_SCRIPT', true);
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . "/config.php");
 require_once($CFG->dirroot . "/local/sync/locallib.php");
 require_once ($CFG->libdir . '/clilib.php');
@@ -78,9 +78,13 @@ if($academicids){
 		mtrace("Truncate Table sync_enrol: Success");
 	}
 	
+	$coursecounter = 0;
 	foreach ($academicids as $academicid) {
 		// Courses from Omega
 		list($courses, $syncinfo) = sync_getcourses_fromomega($academicid, $syncinfo, $options["debug"]);
+		if ($courses[0] == 0){
+		    continue;
+		}
 		// Insert the  courses
 		$DB->insert_records("sync_course", $courses);
 		// Users from Omega
@@ -92,6 +96,14 @@ if($academicids){
 		/*mtrace("Error try to insert the enrolments into the database");
 		mtrace("Forcing exit");
 		exit(0);*/
+		$coursecounter += 1;
+	}
+	if ($coursecounter == 0){
+	    $admins = get_admins();
+	    $case = "sync_getacademicperiod_error";
+	    foreach ($admins as $admin){
+	        sync_sendmail($admin, $case);
+	    }
 	}
 	// insert records in sync_history
 	$historyrecords = array();
@@ -108,7 +120,13 @@ if($academicids){
 	}
 	$DB->insert_records("sync_history", $historyrecords);
 }else{
+    $admins = get_admins();
+    $case = "sync_getacademicperiod_error";
+    foreach ($admins as $admin){
+        sync_sendmail($admin, $case);
+    }
 	mtrace("No se encontraron Periodos académicos activos para sincronizar.");
+	/*For some reason, the tables get truncated anyway
 	if(!$DB->execute("TRUNCATE TABLE {sync_course}")) {
 		mtrace("Truncate Table sync_course Failed");
 	}else{
@@ -119,6 +137,7 @@ if($academicids){
 	}else{
 		mtrace("Truncate Table sync_enrol Success");
 	}
+	*/
 }
 // exec("/Applications/MAMP/bin/php/php7.0.0/bin/php /Applications/MAMP/htdocs/moodle/enrol/database/cli/sync.php");
 // exec("/usr/bin/php /Datos/moodle/moodle/enrol/database/cli/sync.php");
