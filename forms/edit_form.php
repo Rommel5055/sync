@@ -55,7 +55,7 @@ class sync_editmodule_form extends moodleform {
 		
 		$responsible = $data["responsible"];	
 		if($responsible != "") {
-			if(explode("@", $responsible)[1] != "uai.cl") {
+			if(explode("@", $responsible)[1] != "alumnos.uai.cl") {
 				$errors["responsible"] = get_string("error_responsible_invalid", "local_sync");
 			} else if(!$DB->record_exists("user", array("email" => $responsible))) {
 				$errors["responsible"] = get_string("error_responsible_nonexistent", "local_sync");

@@ -474,7 +474,7 @@ function sync_sendmail($admin, $case){
     GLOBAL $CFG, $USER, $DB;
     $userfrom = core_user::get_noreply_user();
     $userfrom->maildisplay = true;
-    $eventdata = new stdClass();
+    $eventdata = new \core\message\message();
     if ($case == "sync_getacademicperiod_error"){
         //subject
         $eventdata->subject = "Get academic period sync error";
@@ -496,6 +496,7 @@ function sync_sendmail($admin, $case){
     $eventdata->name = "sync_notification"; // this is the message name from messages.php
     $eventdata->userfrom = $userfrom;
     $eventdata->userto = $admin->id;
+    $eventdata->subject = "Sync Error";
     $eventdata->fullmessage = $messagetext;
     $eventdata->fullmessageformat = FORMAT_HTML;
     $eventdata->fullmessagehtml = $messagehtml;
@@ -506,10 +507,10 @@ function sync_sendmail($admin, $case){
     $eventdata->contexturlname = 'Context name';
     $eventdata->replyto = "random@example.com";
     $content = array('*' => array('header' => ' test ', 'footer' => ' test ')); // Extra content for specific processor
-    //$eventdata->set_additional_content('email', $content);
+    $eventdata->set_additional_content('email', $content);
     
     $eventdata->courseid = 1;
-    message_send($eventdata);
+    $messageid = message_send($eventdata);
     
                 
 }
