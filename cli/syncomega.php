@@ -30,15 +30,7 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) . "/config.php");
 require_once($CFG->dirroot . "/local/sync/locallib.php");
 require_once ($CFG->libdir . '/clilib.php');
 
-global $DB, $CFG, $PAGE;
-require_login();
-if (isguestuser()) {
-    print_error(get_string('notallowedprint', 'local_paperattendance'));
-    die();
-}
-
-$context = context_system::instance();
-$PAGE->set_context($context);
+global $DB, $CFG;
 
 // Now get cli options
 list($options, $unrecognized) = cli_get_params(array(
