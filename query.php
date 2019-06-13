@@ -24,7 +24,7 @@ $query = "SELECT c.id,
         WHERE c.id > 0 AND r.archetype $sqlin
         Group By c.id";
 $results = $DB->get_records_sql($query, $par);
-
+var_dump($results);
 echo "<table border = 1>
         <tr>
         <th>cid</th>
