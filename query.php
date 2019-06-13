@@ -22,7 +22,8 @@ $query = "SELECT c.id,
         INNER JOIN mdl_user AS u ON u.id = ra.userid
         INNER JOIN mdl_role AS r ON r.id = ra.roleid
         WHERE c.id > 0 AND r.archetype = 'student'
-        Group By c.id";
+        Group By c.id, c.fullname, c.shortname
+        Order By c.id";
 $results = $DB->get_records_sql($query, $par);
 //var_dump($results);
 echo "<table border = 1>
