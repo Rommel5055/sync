@@ -55,7 +55,7 @@ if($options['help']) {
 	die();
 }
 //heading
-cli_heading('Check'); // TODO: localize
+//cli_heading('Check'); // TODO: localize
 echo "\nStarting at ".date("F j, Y, G:i:s")."\n";
 
 $empty = sync_emptycourses();
