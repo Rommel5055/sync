@@ -64,6 +64,7 @@ if (empty($empty)){
 }
 else{
     echo "\nThere are empty courses!\nFor more information check your email.\n";
+    $admins = get_admins();
     $case = "sync_emptycourses";
     foreach ($admins as $admin){
         sync_sendmail($admin, $case, $empty);
