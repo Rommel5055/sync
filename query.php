@@ -27,7 +27,7 @@ $query = "SELECT c.id,
         LEFT JOIN mdl_role_assignments AS ra ON ra.contextid = ct.id
         LEFT OUTER JOIN mdl_user AS u ON u.id = ra.userid
         LEFT OUTER JOIN mdl_role AS r ON r.id = ra.roleid AND r.archetype $sqlin
-        WHERE c.id > 0 AND c.enddate <= ?
+        WHERE c.id > 0 AND c.enddate >= ?
         Group By c.id, c.fullname, c.shortname
         Order By count(u.id), c.id";
 $results = $DB->get_records_sql($query, $param);
