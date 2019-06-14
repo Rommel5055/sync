@@ -24,7 +24,7 @@ $query = "SELECT c.id,
         LEFT JOIN mdl_role AS r ON r.id = ra.roleid
         WHERE c.id > 0 AND r.archetype = ?
         Group By c.id, c.fullname, c.shortname
-        Order By c.id";
+        Order By count(u.id), c.id";
 $results = $DB->get_records_sql($query, $par);
 //var_dump($results);
 echo "<table border = 1>
