@@ -20,9 +20,9 @@ $query = "SELECT c.id,
         FROM mdl_course AS c
         INNER JOIN mdl_context AS ct ON c.id = ct.instanceid
         LEFT JOIN mdl_role_assignments AS ra ON ra.contextid = ct.id
-        LEFT JOIN mdl_user AS u ON u.id = ra.userid
-        LEFT JOIN mdl_role AS r ON r.id = ra.roleid
-        WHERE c.id > 0 AND r.archetype = ?
+        LEFT JOIN OUTER mdl_user AS u ON u.id = ra.userid
+        LEFT OUTER JOIN mdl_role AS r ON r.id = ra.roleid r.archetype = ?
+        WHERE c.id > 0 
         Group By c.id, c.fullname, c.shortname
         Order By count(u.id), c.id";
 $results = $DB->get_records_sql($query, $par);
