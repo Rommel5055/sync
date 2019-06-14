@@ -14,7 +14,7 @@ $par = array();
 $par[] = 'student';
 list ( $sqlin, $para ) = $DB->get_in_or_equal ( $par);
 $today = array();
-$today[] = date();
+$today[] = time();
 $param = array_merge($para, $today);
 
 
