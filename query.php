@@ -10,7 +10,8 @@ if (isguestuser()) {
     die();
 }
 
-$par = 'student';
+$par = array();
+$par[] = 'student';
 
 $query = "SELECT c.id,
         count(u.id) AS nstudents,
