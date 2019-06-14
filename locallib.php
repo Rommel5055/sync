@@ -536,6 +536,7 @@ function sync_sendmail($admin, $case, $courses){
 }
 
 function sync_emptycourses(){
+    GLOBAL $DB;
     $par = array();
     $par[] = 'student';
     
