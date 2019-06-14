@@ -102,7 +102,7 @@ if($academicids){
 	    $admins = get_admins();
 	    $case = "sync_getacademicperiod_error";
 	    foreach ($admins as $admin){
-	        sync_sendmail($admin, $case);
+	        sync_sendmail($admin, $case, null);
 	    }
 	}
 	// insert records in sync_history
@@ -123,7 +123,7 @@ if($academicids){
     $admins = get_admins();
     $case = "sync_getacademicperiod_error";
     foreach ($admins as $admin){
-        sync_sendmail($admin, $case);
+        sync_sendmail($admin, $case, null);
     }
 	mtrace("No se encontraron Periodos académicos activos para sincronizar.");
 	/*For some reason, the tables get truncated anyway

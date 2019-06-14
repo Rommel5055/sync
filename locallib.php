@@ -470,7 +470,7 @@ function sync_records_tabs() {
 	return $tabs;
 }
 
-function sync_sendmail($admin, $case){
+function sync_sendmail($admin, $case, $courses){
     GLOBAL $CFG, $USER, $DB;
     $userfrom = core_user::get_noreply_user();
     $userfrom->maildisplay = true;
@@ -492,6 +492,26 @@ function sync_sendmail($admin, $case){
         $messagetext .= date('d/m/Y h:i:s a', time()). "\n";
         $messagetext .= "We are sorry for the inconvenience.\n Sincerely, \n The WebCursos Team ". "\n";
     }
+    else if($case == "sync_emptycourses"){
+        $eventdata->subject = "Sync Error: Courses with no students";
+        $messagehtml = "<html>";
+        $messagehtml .= "<p>"."Dear: ". $admin->firstname . " " . $admin->lastname . ",</p>";
+        $messagehtml .= "<p>"."This automated mail regrets to inform you there was an error while performing the synchronization. The following courses have been detected to have no students enroled: " . "</p>";
+        foreach($courses as $course){
+            $messagehtml .= "<p>". $course->fullname. " (" . $course->shortname . ")" . "</p>";
+        }
+        $messagehtml .= "<p>". "We are sorry for the inconvenience." ."</p>";
+        $messagehtml .= "<p>". "Sincerely, " ."</p>";
+        $messagehtml .= "<p>". "The WebCursos Team" ."</p>";
+        $messagehtml .= "</html>";
+        
+        $messagetext = "Dear" ." ". $admin->firstname . " " . $admin->lastname . ",\n";
+        $messagetext .= "This automated mail regrets to inform you there was an error while performing the synchronization. The following courses have been detected to have no students enroled: ". "\n";
+        foreach($courses as $course){
+            $messagetext .= $course->fullname. " (" . $course->shortname . ")\n";
+        }
+        $messagetext .= "We are sorry for the inconvenience.\n Sincerely, \n The WebCursos Team ". "\n";
+    }
     $eventdata->component = "local_sync"; // your component name
     $eventdata->name = "sync_notification"; // this is the message name from messages.php
     $eventdata->userfrom = $userfrom;
@@ -503,14 +523,45 @@ function sync_sendmail($admin, $case){
     $eventdata->smallmessage = "Sync error";
     $eventdata->notification = 1; // this is only set to 0 for personal messages between users
     
-    $eventdata->contexturl = 'http://GalaxyFarFarAway.com';
+    $eventdata->contexturl = 'http://www.webcursos.uai.cl';
     $eventdata->contexturlname = 'Context name';
     $eventdata->replyto = "random@example.com";
-    $content = array('*' => array('header' => ' test ', 'footer' => ' test ')); // Extra content for specific processor
+    $content = array('*' => array('header' => ' ', 'footer' => ' This is an automated message. Do not reply. ')); // Extra content for specific processor
     $eventdata->set_additional_content('email', $content);
     
-    $eventdata->courseid = 1;
+    $eventdata->courseid = 1;//the course id was needed according to the documentation.
     $messageid = message_send($eventdata);
     
                 
+}
+
+function sync_emptycourses(){
+    $par = array();
+    $par[] = 'student';
+    
+    $query = "SELECT c.id,
+        count(u.id) AS nstudents,
+        c.fullname,
+        c.shortname
+        FROM mdl_course AS c
+        INNER JOIN mdl_context AS ct ON c.id = ct.instanceid
+        INNER JOIN mdl_role_assignments AS ra ON ra.contextid = ct.id
+        INNER JOIN mdl_user AS u ON u.id = ra.userid
+        INNER JOIN mdl_role AS r ON r.id = ra.roleid
+        WHERE c.id > 0 AND r.archetype = ?
+        Group By c.id, c.fullname, c.shortname
+        Order By c.id";
+    $results = $DB->get_records_sql($query, $par);
+    
+    $empty = array();
+    foreach ($results as $c){
+        if($c->nstudents == 0){
+            $course = new stdClass();
+            $course->id = $c->id;
+            $course->fullname = $c->fullname;
+            $course->shortname = $c->shortname;
+            $empty[] = $course;
+        }
+    }
+    return $empty;
 }

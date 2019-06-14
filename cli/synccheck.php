@@ -58,4 +58,15 @@ if($options['help']) {
 cli_heading('Check'); // TODO: localize
 echo "\nStarting at ".date("F j, Y, G:i:s")."\n";
 
+$empty = sync_emptycourses();
+if (empty($empty)){
+    echo "\nNo course came empty. All is good.\n";   
+}
+else{
+    echo "\nThere are empty courses!\nFor more information check your email.\n";
+    $case = "sync_emptycourses";
+    foreach ($admins as $admin){
+        sync_sendmail($admin, $case, $empty);
+    }
+}
 
