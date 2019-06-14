@@ -12,6 +12,11 @@ if (isguestuser()) {
 
 $par = array();
 $par[] = 'student';
+list ( $sqlin, $para ) = $DB->get_in_or_equal ( $par);
+$today = array();
+$today[] = date();
+$param = array_merge($para, $today);
+
 
 $query = "SELECT c.id,
         count(u.id) AS nstudents,
@@ -21,11 +26,11 @@ $query = "SELECT c.id,
         INNER JOIN mdl_context AS ct ON c.id = ct.instanceid
         LEFT JOIN mdl_role_assignments AS ra ON ra.contextid = ct.id
         LEFT OUTER JOIN mdl_user AS u ON u.id = ra.userid
-        LEFT OUTER JOIN mdl_role AS r ON r.id = ra.roleid AND r.archetype = ?
-        WHERE c.id > 0 
+        LEFT OUTER JOIN mdl_role AS r ON r.id = ra.roleid AND r.archetype $sqlin
+        WHERE c.id > 0 AND c.enddate <= ?
         Group By c.id, c.fullname, c.shortname
         Order By count(u.id), c.id";
-$results = $DB->get_records_sql($query, $par);
+$results = $DB->get_records_sql($query, $param);
 //var_dump($results);
 echo "<table border = 1>
         <tr>
