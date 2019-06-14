@@ -539,6 +539,11 @@ function sync_emptycourses(){
     GLOBAL $DB;
     $par = array();
     $par[] = 'student';
+    list ( $sqlin, $para ) = $DB->get_in_or_equal ( $par);
+    $today = array();
+    $today[] = time();
+    $param = array_merge($para, $today);
+    
     
     $query = "SELECT c.id,
         count(u.id) AS nstudents,
@@ -546,13 +551,13 @@ function sync_emptycourses(){
         c.shortname
         FROM mdl_course AS c
         INNER JOIN mdl_context AS ct ON c.id = ct.instanceid
-        INNER JOIN mdl_role_assignments AS ra ON ra.contextid = ct.id
-        INNER JOIN mdl_user AS u ON u.id = ra.userid
-        INNER JOIN mdl_role AS r ON r.id = ra.roleid
-        WHERE c.id > 0 AND r.archetype = ?
+        LEFT JOIN mdl_role_assignments AS ra ON ra.contextid = ct.id
+        LEFT OUTER JOIN mdl_user AS u ON u.id = ra.userid
+        LEFT OUTER JOIN mdl_role AS r ON r.id = ra.roleid AND r.archetype $sqlin
+        WHERE c.id > 0 AND c.enddate >= ?
         Group By c.id, c.fullname, c.shortname
-        Order By c.id";
-    $results = $DB->get_records_sql($query, $par);
+        Order By count(u.id), c.id";
+    $results = $DB->get_records_sql($query, $param);
     
     $empty = array();
     foreach ($results as $c){
