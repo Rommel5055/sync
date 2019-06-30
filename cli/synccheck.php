@@ -23,7 +23,7 @@
 * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 
-define('CLI_SCRIPT', true);
+//define('CLI_SCRIPT', true);
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . "/config.php");
 require_once($CFG->dirroot . "/local/sync/locallib.php");
 require_once ($CFG->libdir . '/clilib.php');
@@ -64,10 +64,51 @@ if (empty($empty)){
 }
 else{
     echo "\nThere are empty courses!\nFor more information check your email.\n";
-    $admins = get_admins();
+    $mails = explode("," ,$CFG->paperattendance_enrolmethod);
+    $userlist = array();
+    foreach ($mmails as $mail){
+        $usercfg = $DB->get_record('user', array('email' => $mail));
+        $userlist[] = $usercfg;
+    }
     $case = "sync_emptycourses";
-    foreach ($admins as $admin){
-        sync_sendmail($admin, $case, $empty);
+    foreach ($userlist as $mail){
+        sync_sendmail($mail, $case, $empty);
+    }
+}
+
+$empty = sync_emptysyncenrol();
+if (empty($empty)){
+    echo "\nNo course came empty. All is good.\n";
+}
+else{
+    echo "\nThere are empty courses!\nFor more information check your email.\n";
+    $mails = explode("," ,$CFG->paperattendance_enrolmethod);
+    $userlist = array();
+    foreach ($mmails as $mail){
+        $usercfg = $DB->get_record('user', array('email' => $mail));
+        $userlist[] = $usercfg;
+    }
+    $case = "sync_emptysynccourses";
+    foreach ($userlist as $mail){
+        sync_sendmail($mail, $case, $empty);
+    }
+}
+
+$empty = sync_emptysynccourses();
+if (empty($empty)){
+    echo "\nNo sync category came empty. All is good.\n";
+}
+else{
+    echo "\nThere are empty courses!\nFor more information check your email.\n";
+    $mails = explode("," ,$CFG->paperattendance_enrolmethod);
+    $userlist = array();
+    foreach ($mmails as $mail){
+        $usercfg = $DB->get_record('user', array('email' => $mail));
+        $userlist[] = $usercfg;
+    }
+    $case = "sync_emptysynccat";
+    foreach ($userlist as $mail){
+        sync_sendmail($mail, $case, $empty);
     }
 }
 

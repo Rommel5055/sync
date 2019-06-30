@@ -512,6 +512,49 @@ function sync_sendmail($admin, $case, $courses){
         }
         $messagetext .= "We are sorry for the inconvenience.\n Sincerely, \n The WebCursos Team ". "\n";
     }
+    
+    else if($case == "sync_emptysynccourses"){
+        $eventdata->subject = "Sync Error: Sync courses with no students";
+        $messagehtml = "<html>";
+        $messagehtml .= "<p>"."Dear: ". $admin->firstname . " " . $admin->lastname . ",</p>";
+        $messagehtml .= "<p>"."This automated mail regrets to inform you there was an error while performing the synchronization. The following courses have been detected to have no students enroled in the sync table: " . "</p>";
+        foreach($courses as $course){
+            $messagehtml .= "<p>". $course->fullname. " (" . $course->shortname . ")" . "</p>";
+        }
+        $messagehtml .= "<p>". "We are sorry for the inconvenience." ."</p>";
+        $messagehtml .= "<p>". "Sincerely, " ."</p>";
+        $messagehtml .= "<p>". "The WebCursos Team" ."</p>";
+        $messagehtml .= "</html>";
+        
+        $messagetext = "Dear" ." ". $admin->firstname . " " . $admin->lastname . ",\n";
+        $messagetext .= "This automated mail regrets to inform you there was an error while performing the synchronization. The following courses have been detected to have no students enroled in the sync table: ". "\n";
+        foreach($courses as $course){
+            $messagetext .= $course->fullname. " (" . $course->shortname . ")\n";
+        }
+        $messagetext .= "We are sorry for the inconvenience.\n Sincerely, \n The WebCursos Team ". "\n";
+    }
+    
+    else if($case == "paperattendance_enrolmethod"){
+        $eventdata->subject = "Sync Error: Sync courses with no students";
+        $messagehtml = "<html>";
+        $messagehtml .= "<p>"."Dear: ". $admin->firstname . " " . $admin->lastname . ",</p>";
+        $messagehtml .= "<p>"."This automated mail regrets to inform you there was an error while performing the synchronization. The following categories have been detected to have no courses in the sync table: " . "</p>";
+        foreach($courses as $course){
+            $messagehtml .= "<p>". $course->fullname. " (" . $course->shortname . ")" . "</p>";
+        }
+        $messagehtml .= "<p>". "We are sorry for the inconvenience." ."</p>";
+        $messagehtml .= "<p>". "Sincerely, " ."</p>";
+        $messagehtml .= "<p>". "The WebCursos Team" ."</p>";
+        $messagehtml .= "</html>";
+        
+        $messagetext = "Dear" ." ". $admin->firstname . " " . $admin->lastname . ",\n";
+        $messagetext .= "This automated mail regrets to inform you there was an error while performing the synchronization. The following categories have been detected to have no courses in the sync table: ". "\n";
+        foreach($courses as $course){
+            $messagetext .= $course->fullname. " (" . $course->shortname . ")\n";
+        }
+        $messagetext .= "We are sorry for the inconvenience.\n Sincerely, \n The WebCursos Team ". "\n";
+    }
+    
     $eventdata->component = "local_sync"; // your component name
     $eventdata->name = "sync_notification"; // this is the message name from messages.php
     $eventdata->userfrom = $userfrom;
@@ -549,11 +592,11 @@ function sync_emptycourses(){
         count(u.id) AS nstudents,
         c.fullname,
         c.shortname
-        FROM mdl_course AS c
-        INNER JOIN mdl_context AS ct ON c.id = ct.instanceid
-        LEFT JOIN mdl_role_assignments AS ra ON ra.contextid = ct.id
-        LEFT OUTER JOIN mdl_user AS u ON u.id = ra.userid
-        LEFT OUTER JOIN mdl_role AS r ON r.id = ra.roleid AND r.archetype $sqlin
+        FROM {course} AS c
+        INNER JOIN {context} AS ct ON c.id = ct.instanceid
+        LEFT JOIN {role_assignments} AS ra ON ra.contextid = ct.id
+        LEFT OUTER JOIN {user} AS u ON u.id = ra.userid
+        LEFT OUTER JOIN {role} AS r ON r.id = ra.roleid AND r.archetype $sqlin
         WHERE c.id > 0 AND c.enddate >= ?
         Group By c.id, c.fullname, c.shortname
         Order By count(u.id), c.id";
@@ -566,6 +609,49 @@ function sync_emptycourses(){
             $course->id = $c->id;
             $course->fullname = $c->fullname;
             $course->shortname = $c->shortname;
+            $empty[] = $course;
+        }
+    }
+    return $empty;
+}
+
+function sync_emptysynccourses(){
+    GLOBAL $DB;
+    
+    $query = "SELECT sc.catid,
+        count(sc.id) AS ncourses
+        FROM {sync_course} AS sc
+        INNER JOIN {course} as c ON (sc.id = c.id)
+        WHERE c.id > 0 AND c.enddate >= ?
+        Group By c.id, c.fullname, c.shortname
+        Order By count(u.id), c.id";
+    $results = $DB->get_records_sql($query);
+    
+    $empty = array();
+    foreach ($results as $c){
+        if($c->ncourses == 0){
+            $cat = new stdClass();
+            $cat->id = $c->categoryid;
+            $empty[] = $cat;
+        }
+    }
+    return $empty;
+}
+
+function sync_emptysyncenrol(){
+    GLOBAL $DB;
+    
+    $query = "SELECT course,
+        count(id) AS nstudetns
+        FROM {sync_enrol}
+        Group By id";
+    $results = $DB->get_records_sql($query);
+    
+    $empty = array();
+    foreach ($results as $c){
+        if($c->nstudents == 0){
+            $course = new stdClass();
+            $course->id = $c->categoryid;
             $empty[] = $course;
         }
     }
