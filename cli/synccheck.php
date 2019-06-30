@@ -58,19 +58,20 @@ if($options['help']) {
 cli_heading('Check'); // TODO: localize
 echo "\nStarting at ".date("F j, Y, G:i:s")."\n";
 
+$mails = explode("," ,$CFG->paperattendance_enrolmethod);
+$userlist = array();
+foreach ($mails as $mail){
+    $usercfg = $DB->get_record('user', array('email' => $mail));
+    $userlist[] = $usercfg;
+    var_dump($usercfg);
+}
+
 $empty = sync_emptycourses();
 if (empty($empty)){
     echo "\nNo course came empty. All is good.\n";   
 }
 else{
     echo "\nThere are empty courses!\nFor more information check your email.\n";
-    $mails = explode("," ,$CFG->paperattendance_enrolmethod);
-    $userlist = array();
-    foreach ($mails as $mail){
-        $usercfg = $DB->get_record('user', array('email' => $mail));
-        $userlist[] = $usercfg;
-        var_dump($usercfg);
-    }var_dump($userlist);
     $case = "sync_emptycourses";
     foreach ($userlist as $mail){
         sync_sendmail($mail, $case, $empty);
@@ -83,12 +84,6 @@ if (empty($empty)){
 }
 else{
     echo "\nThere are empty courses!\nFor more information check your email.\n";
-    $mails = explode("," ,$CFG->paperattendance_enrolmethod);
-    $userlist = array();
-    foreach ($mmails as $mail){
-        $usercfg = $DB->get_record('user', array('email' => $mail));
-        $userlist[] = $usercfg;
-    }
     $case = "sync_emptysynccourses";
     foreach ($userlist as $mail){
         sync_sendmail($mail, $case, $empty);
@@ -101,12 +96,6 @@ if (empty($empty)){
 }
 else{
     echo "\nThere are empty courses!\nFor more information check your email.\n";
-    $mails = explode("," ,$CFG->paperattendance_enrolmethod);
-    $userlist = array();
-    foreach ($mmails as $mail){
-        $usercfg = $DB->get_record('user', array('email' => $mail));
-        $userlist[] = $usercfg;
-    }
     $case = "sync_emptysynccat";
     foreach ($userlist as $mail){
         sync_sendmail($mail, $case, $empty);
