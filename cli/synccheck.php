@@ -66,7 +66,7 @@ else{
     echo "\nThere are empty courses!\nFor more information check your email.\n";
     $mails = explode("," ,$CFG->paperattendance_enrolmethod);
     $userlist = array();
-    foreach ($mmails as $mail){
+    foreach ($mails as $mail){
         $usercfg = $DB->get_record('user', array('email' => $mail));
         $userlist[] = $usercfg;
     }
