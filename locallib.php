@@ -642,7 +642,7 @@ function sync_emptysyncenrol(){
     GLOBAL $DB;
     
     $query = "SELECT id, course,
-        count(id) AS nstudetns
+        count(id) AS nstudents
         FROM {sync_enrol}
         Group By id";
     $results = $DB->get_records_sql($query);
