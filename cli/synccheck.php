@@ -70,7 +70,7 @@ else{
         $usercfg = $DB->get_record('user', array('email' => $mail));
         $userlist[] = $usercfg;
         var_dump($usercfg);
-    }
+    }var_dump($userlist);
     $case = "sync_emptycourses";
     foreach ($userlist as $mail){
         sync_sendmail($mail, $case, $empty);
