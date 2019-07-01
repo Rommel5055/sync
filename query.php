@@ -10,29 +10,30 @@ if (isguestuser()) {
     die();
 }
 
-$today = time();
-list ( $sqlin, $para ) = $DB->get_in_or_equal ($today);
-
-$sql = "SELECT sc.categoryid,
-        count(sc.id) AS ncourses
-        FROM {sync_course} AS sc
-        INNER JOIN {course} as c ON (sc.id = c.id)
-        WHERE c.id > 0 AND c.enddate >= ?
-        Group By sc.categoryid";
-$results = $DB->get_records_sql($sql, [$today]);
+$mails = explode("," ,$CFG->sync_mailalert);
+foreach ($mails as $mail){
+    $usercfg = $DB->get_records_sql('Select id,
+                                            firstname,
+                                            lastname,
+                                            email
+                                            From {user} where email == ?', array([$mail]));
 
 
 //var_dump($results);
 echo "<table border = 1>
         <tr>
-        <th>catid</th>
-        <th>ncourses</th>
+        <th>id</th>
+        <th>firstname</th>
+        <th>lastname</th>
+        <th>email</th>
         </tr>
         ";
 foreach ($results as $row){
     echo "<tr>";
-    echo "<td>". $row->catid."</td>";
-    echo "<td>". $row->ncourses."</td>";
+    echo "<td>". $row->id."</td>";
+    echo "<td>". $row->firstname."</td>";
+    echo "<td>". $row->lastname."</td>";
+    echo "<td>". $row->email."</td>";
     echo "</tr>";
 }
 echo "</table>";
