@@ -64,7 +64,7 @@ foreach ($mails as $mail){
     $usercfg = $DB->get_records_sql('Select * From {user} where email = ?', array([$mail]));
     $userlist[] = $usercfg;
     var_dump($usercfg);
-    echo "\n";
+    echo "\n\n\n\n\n\n";
 }
 
 $empty = sync_emptycourses();
