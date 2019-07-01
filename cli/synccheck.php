@@ -59,6 +59,7 @@ cli_heading('Check'); // TODO: localize
 echo "\nStarting at ".date("F j, Y, G:i:s")."\n";
 
 $mails = explode("," ,$CFG->sync_mailalert);
+var_dump($mails);
 $userlist = array();
 foreach ($mails as $mail){
     $usercfg = $DB->get_record('user', array('email' => $mail));
