@@ -65,7 +65,6 @@ foreach ($mails as $mail){
     $userlist[] = $usercfg;
     var_dump($usercfg);
 }
-echo "Something is wrong";
 
 $empty = sync_emptycourses();
 if (empty($empty)){
@@ -75,6 +74,7 @@ else{
     echo "\nThere are empty courses!\nFor more information check your email.\n";
     $case = "sync_emptycourses";
     foreach ($userlist as $mail){
+        var_dump($mail);
         sync_sendmail($mail, $case, $empty);
     }
 }
