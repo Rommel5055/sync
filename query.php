@@ -18,34 +18,27 @@ $today[] = time();
 $param = array_merge($para, $today);
 
 
-$query = "SELECT c.id,
-        count(u.id) AS nstudents,
-        c.fullname,
-        c.shortname
-        FROM mdl_course AS c
-        INNER JOIN mdl_context AS ct ON c.id = ct.instanceid
-        LEFT JOIN mdl_role_assignments AS ra ON ra.contextid = ct.id
-        LEFT OUTER JOIN mdl_user AS u ON u.id = ra.userid
-        LEFT OUTER JOIN mdl_role AS r ON r.id = ra.roleid AND r.archetype $sqlin
+$query = "SELECT sc.catid,
+        count(sc.id) AS ncourses
+        FROM {sync_course} AS sc
+        INNER JOIN {course} as c ON (sc.id = c.id)
         WHERE c.id > 0 AND c.enddate >= ?
         Group By c.id, c.fullname, c.shortname
         Order By count(u.id), c.id";
-$results = $DB->get_records_sql($query, $param);
+$results = $DB->get_records_sql($query);
+
+
 //var_dump($results);
 echo "<table border = 1>
         <tr>
-        <th>cid</th>
-        <th>nstudents</th>
-        <th>fullname</th>
-        <th>shortname</th>
+        <th>catid</th>
+        <th>ncourses</th>
         </tr>
         ";
 foreach ($results as $row){
     echo "<tr>";
-    echo "<td>". $row->id."</td>";
-    echo "<td>". $row->nstudents."</td>";
-    echo "<td>". $row->fullname."</td>";
-    echo "<td>". $row->shortname."</td>";
+    echo "<td>". $row->catid."</td>";
+    echo "<td>". $row->ncourses."</td>";
     echo "</tr>";
 }
 echo "</table>";
