@@ -10,21 +10,17 @@ if (isguestuser()) {
     die();
 }
 
-$par = array();
-$par[] = 'student';
-list ( $sqlin, $para ) = $DB->get_in_or_equal ( $par);
 $today = array();
 $today[] = time();
-$param = array_merge($para, $today);
-
+list ( $sqlin, $para ) = $DB->get_in_or_equal ($today);
 
 $sql = "SELECT sc.catid,
         count(sc.id) AS ncourses
         FROM {sync_course} AS sc
         INNER JOIN {course} as c ON (sc.id = c.id)
-        WHERE c.id > 0 AND c.enddate >= ?
+        WHERE c.id > 0 AND c.enddate >= $sqlin
         Group By sc.catid";
-$results = $DB->get_records_sql($sql);
+$results = $DB->get_records_sql($sql, $para);
 
 
 //var_dump($results);
