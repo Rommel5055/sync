@@ -19,7 +19,7 @@ $sql = "SELECT sc.catid,
         INNER JOIN {course} as c ON (sc.id = c.id)
         WHERE c.id > 0 AND c.enddate >= ?
         Group By sc.catid";
-$results = $DB->get_records_sql($sql, $para);
+$results = $DB->get_records_sql($sql, $today);
 
 
 //var_dump($results);
