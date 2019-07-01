@@ -11,6 +11,7 @@ if (isguestuser()) {
 }
 
 $mails = explode("," ,$CFG->sync_mailalert);
+var_dump($mails);
 foreach ($mails as $mail){
     $results = $DB->get_records_sql('Select id,
                                             firstname,
