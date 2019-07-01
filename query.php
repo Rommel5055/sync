@@ -18,7 +18,8 @@ foreach ($mails as $mail){
                                             firstname,
                                             lastname,
                                             username
-                                            From {user} where username $sqlin", $para);
+                                            From {user} where username $sqlin
+                                            OR email $sqlin", $para);
 }
 
 
