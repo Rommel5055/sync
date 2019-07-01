@@ -23,15 +23,8 @@ $sql = "SELECT sc.catid,
         FROM {sync_course} AS sc
         INNER JOIN {course} as c ON (sc.id = c.id)
         WHERE c.id > 0 AND c.enddate >= ?
-        Group By c.id, c.fullname, c.shortname
-        Order By count(u.id), c.id";
-$results = $DB->get_records_sql('SELECT sc.catid,
-        count(sc.id) AS ncourses
-        FROM {sync_course} AS sc
-        INNER JOIN {course} as c ON (sc.id = c.id)
-        WHERE c.id > 0 AND c.enddate >= ?
-        Group By c.id, c.fullname, c.shortname
-        Order By count(u.id), c.id');
+        Group By c.id";
+$results = $DB->get_records_sql($sql);
 
 
 //var_dump($results);
