@@ -10,8 +10,7 @@ if (isguestuser()) {
     die();
 }
 
-$today = array();
-$today[] = time();
+$today = time();
 list ( $sqlin, $para ) = $DB->get_in_or_equal ($today);
 
 $sql = "SELECT sc.catid,
