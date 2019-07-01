@@ -568,7 +568,7 @@ function sync_sendmail($admin, $case, $courses){
     
     $eventdata->contexturl = 'http://www.webcursos.uai.cl';
     $eventdata->contexturlname = 'Context name';
-    $eventdata->replyto = "random@example.com";
+    $eventdata->replyto = $admin->email;
     $content = array('*' => array('header' => ' ', 'footer' => ' This is an automated message. Do not reply. ')); // Extra content for specific processor
     $eventdata->set_additional_content('email', $content);
     
