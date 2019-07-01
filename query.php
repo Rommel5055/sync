@@ -12,10 +12,13 @@ if (isguestuser()) {
 
 $mails = explode("," ,$CFG->sync_mailalert);
 foreach ($mails as $mail){
-    $results = $DB->get_records_sql('Select *
-                                            From {user} ');
+    $results = $DB->get_records_sql('Select id,
+                                            firstname,
+                                            lastname,
+                                            username
+                                            From {user} where username = ?', array([$mail]));
 }
-//, array([$mail])
+
 
 //var_dump($results);
 echo "<table border = 1>
