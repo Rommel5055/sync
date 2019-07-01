@@ -16,7 +16,7 @@ foreach ($mails as $mail){
                                             firstname,
                                             lastname,
                                             email
-                                            From {user} where email == ?', array([$mail]));
+                                            From {user} where email = ?', array([$mail]));
 }
 
 
