@@ -17,6 +17,7 @@ foreach ($mails as $mail){
                                             lastname,
                                             email
                                             From {user} where email == ?', array([$mail]));
+}
 
 
 //var_dump($results);
