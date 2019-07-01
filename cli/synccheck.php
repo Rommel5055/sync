@@ -68,7 +68,7 @@ foreach ($mails as $mail){
                                             firstname,
                                             lastname,
                                             email
-                                            From {user} where email == ?', array([$mail]));
+                                            From {user} where email = ?', array([$mail]));
     var_dump($usercfg);
     echo "end of usercfg";
     $userlist[] = $usercfg;
