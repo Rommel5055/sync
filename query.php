@@ -15,8 +15,8 @@ foreach ($mails as $mail){
     $results = $DB->get_records_sql('Select id,
                                             firstname,
                                             lastname,
-                                            email
-                                            From {user} where email = ?', array([$mail]));
+                                            username
+                                            From {user} where username = ?', array([$mail]));
 }
 
 
@@ -34,7 +34,7 @@ foreach ($results as $row){
     echo "<td>". $row->id."</td>";
     echo "<td>". $row->firstname."</td>";
     echo "<td>". $row->lastname."</td>";
-    echo "<td>". $row->email."</td>";
+    echo "<td>". $row->username."</td>";
     echo "</tr>";
 }
 echo "</table>";

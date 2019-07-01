@@ -64,7 +64,10 @@ foreach ($mails as $mail){
     echo "var dunmp mail\n";
     var_dump($mail);
     echo "\n\n\n\n\n\n";
-    $usercfg = $DB->get_records_sql('Select *
+    $usercfg = $DB->get_records_sql('Select id, 
+                                            firstname,
+                                            lastname,
+                                            email
                                             From {user} where email = ?', array([$mail]));
     var_dump($usercfg);
     echo "end of usercfg";
