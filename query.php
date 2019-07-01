@@ -18,7 +18,7 @@ $sql = "SELECT sc.categoryid,
         FROM {sync_course} AS sc
         INNER JOIN {course} as c ON (sc.id = c.id)
         WHERE c.id > 0 AND c.enddate >= ?
-        Group By sc.catid";
+        Group By sc.categoryid";
 $results = $DB->get_records_sql($sql, [$today]);
 
 
