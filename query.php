@@ -20,7 +20,7 @@ foreach ($mails as $mail){
                                             lastname,
                                             username
                                             From {user} where username $sqlin
-                                            OR email = ?", $param);
+                                            OR email ?", $param);
 }
 
 
@@ -30,7 +30,6 @@ echo "<table border = 1>
         <th>id</th>
         <th>firstname</th>
         <th>lastname</th>
-        <th>email</th>
         </tr>
         ";
 foreach ($results as $row){
@@ -38,7 +37,6 @@ foreach ($results as $row){
     echo "<td>". $row->id."</td>";
     echo "<td>". $row->firstname."</td>";
     echo "<td>". $row->lastname."</td>";
-    echo "<td>". $row->username."</td>";
     echo "</tr>";
 }
 echo "</table>";
