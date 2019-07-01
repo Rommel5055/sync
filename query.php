@@ -45,7 +45,7 @@ echo"###########################################################################
 echo"###################################################################################################<br>";
 echo"###################################################################################################<br>";
 
-$results = $DB->get_records_sql("Select * from user where firstname = 'javier'");
+$results = $DB->get_records_sql("Select * from {user} where firstname = 'javier'");
 foreach ($results as $res){
     var_dump($res);
     echo "\n";
