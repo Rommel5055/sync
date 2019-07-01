@@ -53,4 +53,10 @@ foreach ($results as $res){
     var_dump($res);
     echo "\n";
 }
+
+$results = $DB->get_records_sql("Select * from {user} where firstname = 'Javier' AND lastname = 'Gonzalez'");
+foreach ($results as $res){
+    var_dump($res);
+    echo "\n";
+}
 ?>
