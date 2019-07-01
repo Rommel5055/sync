@@ -618,6 +618,7 @@ function sync_emptycourses(){
 function sync_emptysynccourses(){
     GLOBAL $DB;
     
+    $today = time();
     $sql = "SELECT sc.categoryid,
         count(sc.id) AS ncourses
         FROM {sync_course} AS sc
