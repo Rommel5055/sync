@@ -13,11 +13,11 @@ if (isguestuser()) {
 $mails = explode("," ,$CFG->sync_mailalert);
 list ( $sqlin, $para ) = $DB->get_in_or_equal ($mails);
 foreach ($mails as $mail){
-    $results = $DB->get_records_sql('Select id,
+    $results = $DB->get_records_sql("Select id,
                                             firstname,
                                             lastname,
                                             username
-                                            From {user} where username $sqlin', $para);
+                                            From {user} where username $sqlin", $para);
 }
 
 
