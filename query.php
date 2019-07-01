@@ -13,13 +13,14 @@ if (isguestuser()) {
 $mails = explode("," ,$CFG->sync_mailalert);
 var_dump($mails);
 list ( $sqlin, $para ) = $DB->get_in_or_equal ($mails);
+$param = array_merge($para, $para);
 foreach ($mails as $mail){
     $results = $DB->get_records_sql("Select id,
                                             firstname,
                                             lastname,
                                             username
                                             From {user} where username $sqlin
-                                            OR email $sqlin", $para);
+                                            OR email = ?", $param);
 }
 
 
