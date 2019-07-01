@@ -61,6 +61,9 @@ echo "\nStarting at ".date("F j, Y, G:i:s")."\n";
 $mails = explode("," ,$CFG->sync_mailalert);
 $userlist = array();
 foreach ($mails as $mail){
+    echo "mail\n";
+    var_dump($usercfg);
+    echo "\n\n\n\n\n\n";
     $usercfg = $DB->get_records_sql('Select * From {user} where email = ?', array([$mail]));
     $userlist[] = $usercfg;
     var_dump($usercfg);
