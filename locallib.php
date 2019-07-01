@@ -618,14 +618,13 @@ function sync_emptycourses(){
 function sync_emptysynccourses(){
     GLOBAL $DB;
     
-    $query = "SELECT sc.catid,
+    $sql = "SELECT sc.categoryid,
         count(sc.id) AS ncourses
         FROM {sync_course} AS sc
         INNER JOIN {course} as c ON (sc.id = c.id)
         WHERE c.id > 0 AND c.enddate >= ?
-        Group By c.id, c.fullname, c.shortname
-        Order By count(u.id), c.id";
-    $results = $DB->get_records_sql($query);
+        Group By sc.categoryid";
+    $results = $DB->get_records_sql($sql, [$today]);
     
     $empty = array();
     foreach ($results as $c){
