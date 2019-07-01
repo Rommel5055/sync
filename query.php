@@ -13,7 +13,7 @@ if (isguestuser()) {
 $today = time();
 list ( $sqlin, $para ) = $DB->get_in_or_equal ($today);
 
-$sql = "SELECT sc.catid,
+$sql = "SELECT sc.categoryid,
         count(sc.id) AS ncourses
         FROM {sync_course} AS sc
         INNER JOIN {course} as c ON (sc.id = c.id)
