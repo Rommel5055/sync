@@ -65,6 +65,7 @@ foreach ($mails as $mail){
     $userlist[] = $usercfg;
     var_dump($usercfg);
 }
+echo "Something is wrong";
 
 $empty = sync_emptycourses();
 if (empty($empty)){
