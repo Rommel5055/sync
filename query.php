@@ -17,7 +17,7 @@ $sql = "SELECT sc.catid,
         count(sc.id) AS ncourses
         FROM {sync_course} AS sc
         INNER JOIN {course} as c ON (sc.id = c.id)
-        WHERE c.id > 0 AND c.enddate >= $sqlin
+        WHERE c.id > 0 AND c.enddate > $sqlin
         Group By sc.catid";
 $results = $DB->get_records_sql($sql, $para);
 
