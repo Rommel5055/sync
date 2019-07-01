@@ -12,7 +12,7 @@ if (isguestuser()) {
 
 $mails = explode("," ,$CFG->sync_mailalert);
 foreach ($mails as $mail){
-    $usercfg = $DB->get_records_sql('Select id,
+    $results = $DB->get_records_sql('Select id,
                                             firstname,
                                             lastname,
                                             email
